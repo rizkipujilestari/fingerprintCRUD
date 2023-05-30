@@ -37,6 +37,8 @@
             btnMatchProbe = new Button();
             btnReset = new Button();
             groupBox2 = new GroupBox();
+            lblStatus = new Label();
+            progressBar = new ProgressBar();
             labelExecTime = new Label();
             btnAddNew = new Button();
             btnEdit = new Button();
@@ -44,9 +46,6 @@
             label4 = new Label();
             btnDelete = new Button();
             btnTestCon = new Button();
-            backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            progressBar = new ProgressBar();
-            lblStatus = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridFingerprint).BeginInit();
             ((System.ComponentModel.ISupportInitialize)imgFingerPrint).BeginInit();
             groupBox3.SuspendLayout();
@@ -176,15 +175,33 @@
             groupBox2.Controls.Add(dataGridFingerprint);
             groupBox2.Location = new Point(290, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(568, 440);
+            groupBox2.Size = new Size(567, 440);
             groupBox2.TabIndex = 3;
             groupBox2.TabStop = false;
             groupBox2.Text = "Database";
             // 
+            // lblStatus
+            // 
+            lblStatus.AutoSize = true;
+            lblStatus.Location = new Point(15, 251);
+            lblStatus.Name = "lblStatus";
+            lblStatus.Size = new Size(114, 19);
+            lblStatus.TabIndex = 18;
+            lblStatus.Text = "Processing... 0%";
+            // 
+            // progressBar
+            // 
+            progressBar.BackColor = Color.White;
+            progressBar.ForeColor = Color.LightSkyBlue;
+            progressBar.Location = new Point(15, 275);
+            progressBar.Name = "progressBar";
+            progressBar.Size = new Size(537, 23);
+            progressBar.TabIndex = 17;
+            // 
             // labelExecTime
             // 
             labelExecTime.AutoSize = true;
-            labelExecTime.Location = new Point(221, 29);
+            labelExecTime.Location = new Point(377, 251);
             labelExecTime.Name = "labelExecTime";
             labelExecTime.Size = new Size(0, 19);
             labelExecTime.TabIndex = 16;
@@ -263,38 +280,12 @@
             btnTestCon.UseVisualStyleBackColor = false;
             btnTestCon.Click += btnTestCon_Click;
             // 
-            // backgroundWorker
-            // 
-            backgroundWorker.WorkerReportsProgress = true;
-            backgroundWorker.WorkerSupportsCancellation = true;
-            backgroundWorker.DoWork += backgroundWorker_DoWork;
-            backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
-            backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
-            // 
-            // progressBar
-            // 
-            progressBar.BackColor = Color.White;
-            progressBar.ForeColor = Color.LightSkyBlue;
-            progressBar.Location = new Point(15, 275);
-            progressBar.Name = "progressBar";
-            progressBar.Size = new Size(537, 23);
-            progressBar.TabIndex = 17;
-            // 
-            // lblStatus
-            // 
-            lblStatus.AutoSize = true;
-            lblStatus.Location = new Point(221, 252);
-            lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(114, 19);
-            lblStatus.TabIndex = 18;
-            lblStatus.Text = "Processing... 0%";
-            // 
             // FormCRUD
             // 
             AutoScaleDimensions = new SizeF(8F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaption;
-            ClientSize = new Size(870, 464);
+            ClientSize = new Size(869, 464);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
@@ -331,7 +322,6 @@
         private Button btnAddNew;
         private Label labelExecTime;
         private ProgressBar progressBar;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
         private Label lblStatus;
     }
 }

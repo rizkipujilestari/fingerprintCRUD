@@ -21,7 +21,7 @@ namespace FingerPrintCRUD
     public partial class FormCRUD : Form
     {
         string fileLocation = "";
-
+        int countData;
 
         public FormCRUD()
         {
@@ -40,6 +40,9 @@ namespace FingerPrintCRUD
             {
                 System.Drawing.Image picture = System.Drawing.Image.FromFile(Properties.Settings.Default.FileName);
             }
+
+            progressBar.Hide();
+            lblStatus.Hide();
 
             LoadData();
         }
@@ -64,6 +67,8 @@ namespace FingerPrintCRUD
                 BindingSource bindingsrc = new BindingSource();
                 bindingsrc.DataSource = datatbl;
                 dataGridFingerprint.DataSource = bindingsrc;
+
+                countData = datatbl.Rows.Count;
 
                 database.connectdb.Close();
             }
@@ -145,6 +150,8 @@ namespace FingerPrintCRUD
                     datatbl.Columns.Add("Similarity Score", typeof(int));
                     datatbl.Columns.Add("Matched", typeof(bool));
 
+                    int row = 0;
+
                     while (reader.Read())
                     {
                         var nomor_induk = reader["nomor_induk"];
@@ -159,6 +166,15 @@ namespace FingerPrintCRUD
 
                         double threshold = 40;
                         bool matches = similarity >= threshold;
+
+                        row++;
+                        double percent = (row / countData) * 100;
+
+                        lblStatus.Show();
+                        progressBar.Show();
+
+                        lblStatus.Text = "Processing... " + percent.ToString() + "%";
+                        progressBar.Value = (int)percent;
 
                         /*// show all with no filter
                         datatbl.Rows.Add(nomor_induk, nama_lengkap, score, matches);*/
@@ -189,8 +205,14 @@ namespace FingerPrintCRUD
                     }
 
                     watch.Stop();
-                    var elapsedMs = watch.ElapsedMilliseconds;
-                    labelExecTime.Text = elapsedMs.ToString();
+                    //var elapsedMs = watch.ElapsedMilliseconds;
+                    // labelExecTime.Text = elapsedMs.ToString() + " MiliSecond(s)";
+
+                    TimeSpan ts = watch.Elapsed;
+                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
+                    labelExecTime.Text = "Execute Time: " + elapsedTime;
 
                     database.connectdb.Close();
 
@@ -219,6 +241,13 @@ namespace FingerPrintCRUD
             fileLocation = "";
             Pictures.path = "";
             txtPath.Text = "";
+
+            labelExecTime.Text = "";
+            progressBar.Value = 0;
+            lblStatus.Text = "";
+
+            lblStatus.Hide();
+            progressBar.Hide();
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -232,19 +261,5 @@ namespace FingerPrintCRUD
             formAdd.ShowDialog();
         }
 
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-        }
-
-        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            lblStatus.Text = $"Process {e.ProgressPercentage} %";
-        }
-
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            lblStatus.Text = "Matching complete! ";
-        }
     }
 }

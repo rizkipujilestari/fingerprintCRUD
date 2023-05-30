@@ -43,4 +43,3 @@ C:\FingerPrintCRUD_Net6\FingerPrintCRUD\bin\Debug\net6.0-windows\runtimes\win-x8
 C:\FingerPrintCRUD_Net6\FingerPrintCRUD\bin\Debug\net6.0-windows\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\FingerPrintCRUD_Net6\FingerPrintCRUD\bin\Debug\net6.0-windows\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\FingerPrintCRUD_Net6\FingerPrintCRUD\obj\Debug\net6.0-windows\FingerPrintCRUD.FormNewData.resources
-C:\FingerPrintCRUD_Net6\FingerPrintCRUD\obj\Debug\net6.0-windows\FingerPrintCRUD.ProgressForm.resources
