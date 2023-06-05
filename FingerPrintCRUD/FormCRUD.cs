@@ -16,6 +16,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Security.Cryptography.Xml;
 using System.Diagnostics;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace FingerPrintCRUD
 {
@@ -162,7 +163,7 @@ namespace FingerPrintCRUD
                 database.connectdb.Close();
             }
         }
-
+        
         private void btnMatchProbe_Click(object sender, EventArgs e)
         {
             if (Pictures.path != "")
@@ -194,8 +195,11 @@ namespace FingerPrintCRUD
                         var nomor_induk = reader["nomor_induk"];
                         var nama_lengkap = reader["nama_lengkap"];
 
-                        var candidate = new FingerprintTemplate(
-                            new FingerprintImage(File.ReadAllBytes(@"" + reader["image_path"] + "")));
+                        /*var candidate = new FingerprintTemplate(
+                            new FingerprintImage(File.ReadAllBytes(@"" + reader["image_path"] + "")));*/
+
+                        var serialized = (byte[])reader["template"];
+                        var candidate = new FingerprintTemplate(serialized);
 
                         var matcher = new FingerprintMatcher(probe);
                         double similarity = matcher.Match(candidate);
@@ -354,7 +358,7 @@ namespace FingerPrintCRUD
             var database = new Database();
             try
             {
-                DialogResult confirmAddNew = MessageBox.Show("This action will delete data permanently, are you sure?", "CAUTION!", MessageBoxButtons.YesNo);
+                DialogResult confirmAddNew = MessageBox.Show("This action will delete data '"+NamaLengkap+"' permanently, are you sure?", "CAUTION!", MessageBoxButtons.YesNo);
                 if (confirmAddNew == DialogResult.Yes)
                 {
                     database.connectdb.Open();
