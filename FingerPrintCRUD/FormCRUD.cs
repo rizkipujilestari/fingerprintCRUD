@@ -317,7 +317,7 @@ namespace FingerPrintCRUD
             {
                 database.connectdb.Open();
 
-                string query = "SELECT * FROM fingerprint WHERE nomor_induk='"+ NomorInduk +"'";
+                string query = "SELECT * FROM fingerprint WHERE nomor_induk='" + NomorInduk + "'";
                 MySqlCommand sql = new MySqlCommand(query, database.connectdb);
                 MySqlDataReader reader = sql.ExecuteReader();
 
@@ -348,5 +348,34 @@ namespace FingerPrintCRUD
         {
             btnEdit.Enabled = false;
         }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            var database = new Database();
+            try
+            {
+                DialogResult confirmAddNew = MessageBox.Show("This action will delete data permanently, are you sure?", "CAUTION!", MessageBoxButtons.YesNo);
+                if (confirmAddNew == DialogResult.Yes)
+                {
+                    database.connectdb.Open();
+                    MySqlCommand sql = new MySqlCommand("DELETE FROM fingerprint WHERE nomor_induk=@nomor_induk limit 1", database.connectdb);
+                    sql.Parameters.AddWithValue("@nomor_induk", NomorInduk);
+                    MySqlDataReader reader = sql.ExecuteReader();
+                    while (reader.Read()) 
+                    {
+                        sql.ExecuteNonQuery();
+                    }
+                    database.connectdb.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Cannot connect to database : " + ex);
+            }
+
+            LoadData();
+        }
+
     }
 }

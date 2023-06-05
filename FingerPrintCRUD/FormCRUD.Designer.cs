@@ -260,7 +260,6 @@
             // btnDelete
             // 
             btnDelete.BackColor = SystemColors.InactiveCaption;
-            btnDelete.Enabled = false;
             btnDelete.FlatStyle = FlatStyle.Flat;
             btnDelete.Location = new Point(377, 305);
             btnDelete.Margin = new Padding(3, 4, 3, 4);
@@ -269,6 +268,7 @@
             btnDelete.TabIndex = 11;
             btnDelete.Text = "Delete Selected Data";
             btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
             // 
             // btnTestCon
             // 
