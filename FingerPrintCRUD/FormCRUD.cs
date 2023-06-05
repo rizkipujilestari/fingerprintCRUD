@@ -15,12 +15,17 @@ using SourceAFIS;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Security.Cryptography.Xml;
 using System.Diagnostics;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 
 namespace FingerPrintCRUD
 {
     public partial class FormCRUD : Form
     {
         string fileLocation = "";
+        public string NomorInduk = "";
+        public string NamaLengkap = "";
+        public string JenisJari = "";
+
         int countData;
 
         public FormCRUD()
@@ -35,16 +40,48 @@ namespace FingerPrintCRUD
 
         private void FormCRUD_Load(object sender, EventArgs e)
         {
-            fileLocation = Properties.Settings.Default.FileName;
-            if (fileLocation != "")
-            {
-                System.Drawing.Image picture = System.Drawing.Image.FromFile(Properties.Settings.Default.FileName);
-            }
+            ImageValidation();
+            LoadData();
 
+            btnEdit.Enabled = false;
             progressBar.Hide();
             lblStatus.Hide();
+        }
 
-            LoadData();
+        public void ImageValidation()
+        {
+            fileLocation = Properties.Settings.Default.FileName;
+            string fileExtension = Path.GetExtension(fileLocation);
+
+            fileExtension = fileExtension.ToLower();
+
+            string[] acceptedFileTypes = new string[7];
+            acceptedFileTypes[1] = ".jpg";
+            acceptedFileTypes[2] = ".jpeg";
+            acceptedFileTypes[3] = ".png";
+
+            bool acceptFile = false;
+
+            for (int i = 0; i <= 6; i++)
+            {
+                if (fileExtension == acceptedFileTypes[i])
+                {
+                    acceptFile = true;
+                }
+            }
+
+            if (!acceptFile)
+            {
+                MessageBox.Show("Please select an image file!");
+                fileLocation = "";
+            }
+            else
+            {
+                if (fileLocation != "")
+                {
+                    System.Drawing.Image picture = System.Drawing.Image.FromFile(Properties.Settings.Default.FileName);
+                }
+            }
         }
 
         public void LoadData()
@@ -55,7 +92,7 @@ namespace FingerPrintCRUD
             {
                 database.connectdb.Open();
                 //string query = "SELECT * FROM fingerprint";
-                string query = "SELECT nomor_induk, nama_lengkap FROM fingerprint";
+                string query = "SELECT nomor_induk, nama_lengkap, jenis_jari FROM fingerprint";
                 MySqlCommand sql = new MySqlCommand(query);
                 sql.Connection = database.connectdb;
 
@@ -82,7 +119,7 @@ namespace FingerPrintCRUD
         {
             OpenFileDialog chooseFile = new OpenFileDialog();
             chooseFile.Title = "Browse Image File";
-            chooseFile.Filter = "Image Files (*.jpg, *.jpeg, *.png)|*.JPG;*.JPEG;*.PNG|All Files(*.*)|*.*";
+            chooseFile.Filter = "Image Files|*.jpg;*.jpeg;*.png";
             chooseFile.FilterIndex = 2;
             chooseFile.Multiselect = false;
             chooseFile.RestoreDirectory = true;
@@ -168,7 +205,9 @@ namespace FingerPrintCRUD
                         bool matches = similarity >= threshold;
 
                         row++;
+
                         double percent = (row / countData) * 100;
+
 
                         lblStatus.Show();
                         progressBar.Show();
@@ -176,14 +215,14 @@ namespace FingerPrintCRUD
                         lblStatus.Text = "Processing... " + percent.ToString() + "%";
                         progressBar.Value = (int)percent;
 
-                        /*// show all with no filter
-                        datatbl.Rows.Add(nomor_induk, nama_lengkap, score, matches);*/
 
                         if (matches == true)
                         {
                             datatbl.Rows.Add(nomor_induk, nama_lengkap, score, matches);
                         }
 
+                        /*// show all with no filter
+                        datatbl.Rows.Add(nomor_induk, nama_lengkap, score, matches);*/
                     }
 
                     bool check_found = true;
@@ -261,5 +300,53 @@ namespace FingerPrintCRUD
             formAdd.ShowDialog();
         }
 
+        private void dataGridFingerprint_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            btnEdit.Enabled = true;
+            NomorInduk = dataGridFingerprint.Rows[e.RowIndex].Cells[0].Value.ToString() ?? "";
+            NamaLengkap = dataGridFingerprint.Rows[e.RowIndex].Cells[1].Value.ToString() ?? "";
+            JenisJari = dataGridFingerprint.Rows[e.RowIndex].Cells[2].Value.ToString() ?? "";
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            var formEdit = new FormEditData();
+
+            var database = new Database();
+            try
+            {
+                database.connectdb.Open();
+
+                string query = "SELECT * FROM fingerprint WHERE nomor_induk='"+ NomorInduk +"'";
+                MySqlCommand sql = new MySqlCommand(query, database.connectdb);
+                MySqlDataReader reader = sql.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var nomor_induk = reader["nomor_induk"];
+                    var nama_lengkap = reader["nama_lengkap"];
+                    var jenis_jari = reader["jenis_jari"];
+                    var image_path = reader["image_path"];
+
+                    formEdit.nomor_induk(nomor_induk);
+                    formEdit.nama_lengkap(nama_lengkap);
+                    formEdit.jenis_jari(jenis_jari);
+                    formEdit.path(image_path);
+                }
+
+                database.connectdb.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Cannot connect to database : " + ex);
+            }
+
+            formEdit.ShowDialog();
+        }
+
+        private void dataGridFingerprint_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            btnEdit.Enabled = false;
+        }
     }
 }

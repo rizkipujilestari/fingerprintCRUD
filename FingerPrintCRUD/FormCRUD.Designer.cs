@@ -66,6 +66,8 @@
             dataGridFingerprint.RowTemplate.Height = 25;
             dataGridFingerprint.Size = new Size(537, 185);
             dataGridFingerprint.TabIndex = 1;
+            dataGridFingerprint.CellClick += dataGridFingerprint_CellClick;
+            dataGridFingerprint.RowHeaderMouseClick += dataGridFingerprint_RowHeaderMouseClick;
             // 
             // txtPath
             // 
@@ -201,7 +203,7 @@
             // labelExecTime
             // 
             labelExecTime.AutoSize = true;
-            labelExecTime.Location = new Point(377, 251);
+            labelExecTime.Location = new Point(372, 251);
             labelExecTime.Name = "labelExecTime";
             labelExecTime.Size = new Size(0, 19);
             labelExecTime.TabIndex = 16;
@@ -230,6 +232,7 @@
             btnEdit.TabIndex = 14;
             btnEdit.Text = "Edit Selected Data";
             btnEdit.UseVisualStyleBackColor = false;
+            btnEdit.Click += btnEdit_Click;
             // 
             // btnExit
             // 
