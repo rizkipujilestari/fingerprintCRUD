@@ -52,33 +52,34 @@ namespace FingerPrintCRUD
         public void ImageValidation()
         {
             fileLocation = Properties.Settings.Default.FileName;
-            string fileExtension = Path.GetExtension(fileLocation);
-
-            fileExtension = fileExtension.ToLower();
-
-            string[] acceptedFileTypes = new string[7];
-            acceptedFileTypes[1] = ".jpg";
-            acceptedFileTypes[2] = ".jpeg";
-            acceptedFileTypes[3] = ".png";
-
-            bool acceptFile = false;
-
-            for (int i = 0; i <= 6; i++)
+            
+            if (fileLocation != "")
             {
-                if (fileExtension == acceptedFileTypes[i])
+                string fileExtension = Path.GetExtension(fileLocation);
+
+                fileExtension = fileExtension.ToLower();
+
+                string[] acceptedFileTypes = new string[7];
+                acceptedFileTypes[1] = ".jpg";
+                acceptedFileTypes[2] = ".jpeg";
+                acceptedFileTypes[3] = ".png";
+
+                bool acceptFile = false;
+
+                for (int i = 0; i <= 6; i++)
                 {
-                    acceptFile = true;
+                    if (fileExtension == acceptedFileTypes[i])
+                    {
+                        acceptFile = true;
+                    }
                 }
-            }
 
-            if (!acceptFile)
-            {
-                MessageBox.Show("Please select an image file!");
-                fileLocation = "";
-            }
-            else
-            {
-                if (fileLocation != "")
+                if (!acceptFile)
+                {
+                    MessageBox.Show("Please select an image file!");
+                    fileLocation = "";
+                }
+                else
                 {
                     System.Drawing.Image picture = System.Drawing.Image.FromFile(Properties.Settings.Default.FileName);
                 }
