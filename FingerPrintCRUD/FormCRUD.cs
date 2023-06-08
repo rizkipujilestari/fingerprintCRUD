@@ -113,7 +113,16 @@ namespace FingerPrintCRUD
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Cannot connect to database :" + ex);
+                var msg = ex.Message.ToString();
+                /*MessageBox.Show("Cannot connect to Database! \nPlease check your database credentials.", "ERROR!", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                  this.Close();*/
+
+                DataTable dataError = new DataTable();
+                dataError.Columns.Add("CAUTION!", typeof(string));
+                dataError.Rows.Add("Failed to connect to Database!");
+                dataGridFingerprint.DataSource = dataError;
+                dataGridFingerprint.Columns[0].Width = 300;
             }
         }
 
@@ -157,7 +166,9 @@ namespace FingerPrintCRUD
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                var msg = ex.Message.ToString();
+                MessageBox.Show("Cannot connect to Database! \nPlease check your database credentials.", "ERROR!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -263,7 +274,9 @@ namespace FingerPrintCRUD
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Cannot connect to database : " + ex);
+                    var msg = ex.Message.ToString();
+                    MessageBox.Show("Cannot connect to Database! \nPlease check your database credentials.", "ERROR!",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
             }
@@ -343,7 +356,9 @@ namespace FingerPrintCRUD
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Cannot connect to database : " + ex);
+                var msg = ex.Message.ToString();
+                MessageBox.Show("Cannot connect to Database! \nPlease check your database credentials.", "ERROR!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             formEdit.ShowDialog();
@@ -376,7 +391,9 @@ namespace FingerPrintCRUD
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Cannot connect to database : " + ex);
+                var msg = ex.Message.ToString();
+                MessageBox.Show("Cannot connect to Database! \nPlease check your database credentials.", "ERROR!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             LoadData();
